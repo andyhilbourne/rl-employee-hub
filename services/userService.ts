@@ -1,25 +1,26 @@
-
 import { User } from '../types';
 
-const MOCK_USERS_STORAGE_KEY = 'rlAllUsers';
+const MOCK_USERS_STORAGE_KEY = 'rlAllUsers_v2';
 
-// Initial mock users. In a real app, this would be fetched or managed by a backend.
 const initialMockUsers: User[] = [
-  { id: 'emp001', username: 'employee', name: 'John Doe', role: 'Field Worker' },
-  { id: 'emp002', username: 'worker2', name: 'Jane Smith', role: 'Foreman' },
-  { id: 'admin001', username: 'admin', name: 'Admin User', role: 'Admin' },
+  { id: 'admin_andy', username: 'andyhilbourne', name: 'Andy Hilbourne', role: 'Admin' },
+  { id: 'emp002', username: 'jane', name: 'Jane Smith', role: 'Field Worker' },
+  { id: 'foreman001', username: 'foreman', name: 'Mike Johnson', role: 'Foreman' },
 ];
 
 const getStoredUsers = (): User[] => {
   const storedUsers = localStorage.getItem(MOCK_USERS_STORAGE_KEY);
   if (storedUsers) {
     try {
-      const users = JSON.parse(storedUsers);
-      // Simple migration: if a user doesn't have a webhookUrl, it will be undefined, which is fine.
+      // Check if the new user exists, if not, reset to new initial data
+      const users = JSON.parse(storedUsers) as User[];
+      if (!users.some(u => u.username === 'andyhilbourne')) {
+         localStorage.setItem(MOCK_USERS_STORAGE_KEY, JSON.stringify(initialMockUsers));
+         return initialMockUsers;
+      }
       return users;
     } catch (e) {
       console.error("Error parsing users from localStorage", e);
-      // Fallback to initial if stored is corrupted
     }
   }
   localStorage.setItem(MOCK_USERS_STORAGE_KEY, JSON.stringify(initialMockUsers));
@@ -31,6 +32,11 @@ const saveUsers = (users: User[]): void => {
 };
 
 export const userService = {
+  findUserByUsername: (username: string): User | undefined => {
+    const users = getStoredUsers();
+    return users.find(u => u.username.toLowerCase() === username.toLowerCase());
+  },
+
   getAllUsers: async (): Promise<User[]> => {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -40,19 +46,10 @@ export const userService = {
   },
 
   getUserById: async (userId: string): Promise<User | undefined> => {
-    return new Promise((resolve) => {
+     return new Promise((resolve) => {
       setTimeout(() => {
         const users = getStoredUsers();
         resolve(users.find(u => u.id === userId));
-      }, 100);
-    });
-  },
-  
-  getUsersByRole: async (role: User['role']): Promise<User[]> => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const users = getStoredUsers();
-        resolve(users.filter(u => u.role === role));
       }, 100);
     });
   },
@@ -61,7 +58,7 @@ export const userService = {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         const users = getStoredUsers();
-        if (users.some(u => u.username === userData.username)) {
+        if (users.some(u => u.username.toLowerCase() === userData.username.toLowerCase())) {
           reject(new Error(`Username "${userData.username}" already exists.`));
           return;
         }
@@ -71,34 +68,29 @@ export const userService = {
         };
         const updatedUsers = [...users, newUser];
         saveUsers(updatedUsers);
-        console.log('Mock createUser:', newUser); // For debugging
         resolve(newUser);
       }, 300);
     });
   },
 
-  updateUser: async (userId: string, updates: Partial<Omit<User, 'id'>>): Promise<User> => {
+  updateUser: async (userId: string, updates: Partial<Omit<User, 'id'>>): Promise<User | undefined> => {
     return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            let users = getStoredUsers();
-            const userIndex = users.findIndex(u => u.id === userId);
-            if (userIndex > -1) {
-                users[userIndex] = { ...users[userIndex], ...updates };
-                saveUsers(users);
-                resolve(users[userIndex]);
-            } else {
-                reject(new Error("User not found."));
-            }
-        }, 300);
+      setTimeout(() => {
+        let users = getStoredUsers();
+        const userIndex = users.findIndex(u => u.id === userId);
+        if (userIndex > -1) {
+          // Check if username is being changed to an existing one
+          if (updates.username && users.some(u => u.username.toLowerCase() === updates.username!.toLowerCase() && u.id !== userId)) {
+            reject(new Error(`Username "${updates.username}" is already taken.`));
+            return;
+          }
+          users[userIndex] = { ...users[userIndex], ...updates };
+          saveUsers(users);
+          resolve(users[userIndex]);
+        } else {
+          resolve(undefined);
+        }
+      }, 300);
     });
   },
-
-  // deleteUser: async (userId: string): Promise<void> => { ... }
-
-
-  // This function is used by authService for login
-  findUserByUsername: (username: string): User | undefined => {
-    const users = getStoredUsers();
-    return users.find(u => u.username === username);
-  }
 };

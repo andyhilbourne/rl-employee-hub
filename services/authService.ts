@@ -9,14 +9,18 @@ export const authService = {
       setTimeout(() => {
         const user = userService.findUserByUsername(username);
         
-        // Simple password check for demo
-        // For Admin: admin/adminpass
-        // For others: username/password
         let isValidPassword = false;
         if (user) {
-            if (user.role === 'Admin' && passwordInput === 'adminpass') {
+            // Specific check for the new admin user
+            if (user.username === 'andyhilbourne' && passwordInput === 'Esmeisaac_2016') {
                 isValidPassword = true;
-            } else if (user.role !== 'Admin' && passwordInput === 'password') {
+            } 
+            // Generic check for other potential admin users created via UI
+            else if (user.role === 'Admin' && passwordInput === 'adminpass') {
+                isValidPassword = true;
+            } 
+            // Generic check for all non-admin roles
+            else if (user.role !== 'Admin' && passwordInput === 'password') {
                 isValidPassword = true;
             }
         }
@@ -25,7 +29,7 @@ export const authService = {
           localStorage.setItem(MOCK_USER_KEY, JSON.stringify(user));
           resolve(user);
         } else {
-          reject(new Error('Invalid username or password. Try "employee"/"password" or "admin"/"adminpass".'));
+          reject(new Error('Invalid username or password.'));
         }
       }, 500);
     });

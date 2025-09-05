@@ -93,8 +93,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
           </div>
         </form>
          <div className="mt-6 text-center text-xs text-gray-500">
-          <p>Demo Admin: <span className="font-mono">admin</span> / <span className="font-mono">adminpass</span></p>
-          <p>Demo Employee: <span className="font-mono">employee</span> / <span className="font-mono">password</span></p>
+          <p>Admin Login: <span className="font-mono">andyhilbourne</span></p>
+          <p>Demo Employee: <span className="font-mono">jane</span> / <span className="font-mono">password</span></p>
         </div>
       </div>
        <footer className="text-center p-4 text-sm text-gray-500 mt-8">

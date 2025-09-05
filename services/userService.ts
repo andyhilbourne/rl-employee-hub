@@ -1,9 +1,9 @@
 import { User } from '../types';
 
-const MOCK_USERS_STORAGE_KEY = 'rlAllUsers_v2';
+const MOCK_USERS_STORAGE_KEY = 'rlAllUsers_v3'; // Incremented version
 
 const initialMockUsers: User[] = [
-  { id: 'admin_andy', username: 'andyhilbourne', name: 'Andy Hilbourne', role: 'Admin' },
+  { id: 'admin_andy', username: 'andyhilbourne', password: 'Esmeisaac_2016', name: 'Andy Hilbourne', role: 'Admin' },
 ];
 
 const getStoredUsers = (): User[] => {
@@ -52,7 +52,7 @@ export const userService = {
     });
   },
 
-  createUser: async (userData: Omit<User, 'id' | 'webhookUrl'>): Promise<User> => {
+  createUser: async (userData: Omit<User, 'id' | 'webhookUrl' | 'password'>): Promise<{ user: User; defaultPassword: string }> => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         const users = getStoredUsers();
@@ -60,18 +60,26 @@ export const userService = {
           reject(new Error(`Username "${userData.username}" already exists.`));
           return;
         }
+
+        // Generate a password with username + 3 random numbers
+        const randomThreeDigits = Math.floor(100 + Math.random() * 900);
+        const defaultPassword = `${userData.username}${randomThreeDigits}`;
+        
         const newUser: User = {
           ...userData,
           id: `user_${Date.now()}`,
+          password: defaultPassword,
         };
+        
         const updatedUsers = [...users, newUser];
         saveUsers(updatedUsers);
-        resolve(newUser);
+        
+        resolve({ user: newUser, defaultPassword });
       }, 300);
     });
   },
 
-  updateUser: async (userId: string, updates: Partial<Omit<User, 'id'>>): Promise<User | undefined> => {
+  updateUser: async (userId: string, updates: Partial<Omit<User, 'id' | 'password'>>): Promise<User | undefined> => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         let users = getStoredUsers();

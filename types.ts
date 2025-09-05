@@ -1,7 +1,7 @@
-
 export interface User {
   id: string;
   username: string;
+  password?: string; // Added for mock auth
   name: string;
   role: string;
   webhookUrl?: string;
@@ -13,8 +13,6 @@ export interface Site {
   title: string;
   address: string;
   description: string;
-  // latitude?: number; // Removed
-  // longitude?: number; // Removed
 }
 
 export interface Job {
@@ -32,8 +30,6 @@ export interface Job {
 export interface JobWithSiteInfo extends Job {
   siteTitle: string;
   siteAddress: string;
-  // siteLatitude?: number; // Removed
-  // siteLongitude?: number; // Removed
 }
 
 

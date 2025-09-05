@@ -2,33 +2,7 @@ import { Site } from '../types';
 
 const MOCK_SITES_STORAGE_KEY = 'rlAllSites_no_map'; // Updated key
 
-const initialMockSites: Site[] = [
-  {
-    id: 'site001',
-    siteNumber: 'P-101',
-    title: 'Northwood Plaza Renovation',
-    address: '123 Northwood Ave, Anytown, USA',
-    description: 'Complete overhaul of the Northwood Plaza shopping center. Phase 1: Exterior and parking.',
-    // latitude: 34.0522, // Removed
-    // longitude: -118.2437, // Removed
-  },
-  {
-    id: 'site002',
-    siteNumber: 'C-205',
-    title: 'Downtown Tower Construction',
-    address: '456 Central Blvd, Metro City, USA',
-    description: 'New 40-story mixed-use tower. Currently in foundation and structural phase.',
-  },
-  {
-    id: 'site003',
-    siteNumber: 'R-330',
-    title: 'Residential Complex - Oak Hills',
-    address: '789 Oak Hills Drive, Suburbia, USA',
-    description: 'Development of 50 new single-family homes. Site grading and utility installation.',
-    // latitude: 34.1000, // Removed
-    // longitude: -118.3000, // Removed
-  }
-];
+const initialMockSites: Site[] = [];
 
 const getStoredSites = (): Site[] => {
   const storedSites = localStorage.getItem(MOCK_SITES_STORAGE_KEY);

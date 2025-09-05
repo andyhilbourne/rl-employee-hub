@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { User } from '../../types';
 import { userService } from '../../services/userService';
@@ -15,7 +14,6 @@ export const AdminUserManagementPage: React.FC = () => {
   
   const [newUsername, setNewUsername] = useState('');
   const [newName, setNewName] = useState('');
-  const [newPassword, setNewPassword] = useState(''); // Conceptual for mock
   const [selectedRole, setSelectedRole] = useState<string>('Field Worker');
   const [customRoleName, setCustomRoleName] = useState('');
   
@@ -91,10 +89,9 @@ export const AdminUserManagementPage: React.FC = () => {
 
     try {
       await userService.createUser({ username: newUsername, name: newName, role: roleToSave });
-      setSubmitMessage(`User "${newUsername}" with role "${roleToSave}" created successfully. Default password for demo login based on role type (Admin vs non-Admin).`);
+      setSubmitMessage(`User "${newUsername}" with role "${roleToSave}" created successfully. A default password has been assigned.`);
       setNewUsername('');
       setNewName('');
-      setNewPassword('');
       setSelectedRole('Field Worker');
       setCustomRoleName('');
       fetchUsers(); // Refresh the list
@@ -133,11 +130,6 @@ export const AdminUserManagementPage: React.FC = () => {
           <div>
             <label htmlFor="newName" className="block text-sm font-medium text-gray-700">Full Name</label>
             <input type="text" id="newName" value={newName} onChange={(e) => setNewName(e.target.value)} required className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
-          </div>
-           <div>
-            <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700">Password (for demo)</label>
-            <input type="password" id="newPassword" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Default: 'password' or 'adminpass'" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
-            <p className="text-xs text-gray-500 mt-1">Note: Password in mock setup is not securely stored. Use 'password' for non-Admin roles, 'adminpass' for Admin role during login.</p>
           </div>
           <div>
             <label htmlFor="newRole" className="block text-sm font-medium text-gray-700">Role</label>

@@ -4,15 +4,13 @@ const MOCK_USERS_STORAGE_KEY = 'rlAllUsers_v2';
 
 const initialMockUsers: User[] = [
   { id: 'admin_andy', username: 'andyhilbourne', name: 'Andy Hilbourne', role: 'Admin' },
-  { id: 'emp002', username: 'jane', name: 'Jane Smith', role: 'Field Worker' },
-  { id: 'foreman001', username: 'foreman', name: 'Mike Johnson', role: 'Foreman' },
 ];
 
 const getStoredUsers = (): User[] => {
   const storedUsers = localStorage.getItem(MOCK_USERS_STORAGE_KEY);
   if (storedUsers) {
     try {
-      // Check if the new user exists, if not, reset to new initial data
+      // Check if the primary admin exists, if not, reset to new initial data
       const users = JSON.parse(storedUsers) as User[];
       if (!users.some(u => u.username === 'andyhilbourne')) {
          localStorage.setItem(MOCK_USERS_STORAGE_KEY, JSON.stringify(initialMockUsers));

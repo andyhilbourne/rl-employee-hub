@@ -6,57 +6,7 @@ import { siteService } from './siteService'; // For fetching site details
 
 const MOCK_JOBS_STORAGE_KEY = 'rlAllJobs_v2_no_map'; // New key for new structure
 
-const today = new Date();
-const tomorrow = new Date(today);
-tomorrow.setDate(today.getDate() + 1);
-const dayAfterTomorrow = new Date(today);
-dayAfterTomorrow.setDate(today.getDate() + 2);
-const yesterday = new Date(today);
-yesterday.setDate(today.getDate() -1);
-
-
-const initialMockJobs: Job[] = [
-    { 
-      id: 'job001_s1', 
-      siteId: 'site001', 
-      title: 'Exterior Wall Framing - West Wing', 
-      description: 'Frame all exterior walls for the west wing according to blueprint A-102. Safety harnesses required.', 
-      assignedUserId: 'emp001', 
-      startDate: today.toISOString().split('T')[0], 
-      endDate: tomorrow.toISOString().split('T')[0], 
-      status: 'Pending' 
-    },
-    { 
-      id: 'job002_s1', 
-      siteId: 'site001', 
-      title: 'Parking Lot Striping', 
-      description: 'Restripe all parking spaces in the main lot. Use yellow, quick-dry paint.', 
-      assignedUserId: 'emp002', 
-      startDate: today.toISOString().split('T')[0], 
-      endDate: today.toISOString().split('T')[0], 
-      status: 'In Progress' 
-    },
-    { 
-      id: 'job003_s2', 
-      siteId: 'site002', 
-      title: 'Foundation Concrete Pour - Section A', 
-      description: 'Oversee and manage concrete pour for Section A of the tower foundation.', 
-      assignedUserId: 'emp001', 
-      startDate: today.toISOString().split('T')[0], 
-      endDate: dayAfterTomorrow.toISOString().split('T')[0], 
-      status: 'Pending' 
-    },
-     { 
-      id: 'job004_s3', 
-      siteId: 'site003', 
-      title: 'Install Sewer Lines - Plot 1-5', 
-      description: 'Excavate and install main sewer lines for plots 1 through 5.', 
-      assignedUserId: 'emp002', 
-      startDate: yesterday.toISOString().split('T')[0], 
-      endDate: tomorrow.toISOString().split('T')[0], 
-      status: 'Completed' 
-    },
-];
+const initialMockJobs: Job[] = [];
 
 const getStoredJobs = (): Job[] => {
   const storedJobs = localStorage.getItem(MOCK_JOBS_STORAGE_KEY);
